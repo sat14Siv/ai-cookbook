@@ -1,10 +1,13 @@
 import json
 import os
 
-from openai import OpenAI
+import openai
+from dotenv import load_dotenv, find_dotenv
 from pydantic import BaseModel, Field
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+_ = load_dotenv(find_dotenv()) # read local .env file
+
+client = openai.OpenAI(api_key=os.environ['OPENAI_API_KEY'])
 
 """
 docs: https://platform.openai.com/docs/guides/function-calling

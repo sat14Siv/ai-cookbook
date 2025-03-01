@@ -2,10 +2,13 @@ import json
 import os
 
 import requests
-from openai import OpenAI
+import openai
 from pydantic import BaseModel, Field
+from dotenv import load_dotenv, find_dotenv
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+_ = load_dotenv(find_dotenv()) # read local .env file
+
+client = openai.OpenAI(api_key=os.environ['OPENAI_API_KEY'])
 
 """
 docs: https://platform.openai.com/docs/guides/function-calling
@@ -56,6 +59,12 @@ messages = [
     {"role": "user", "content": "What's the weather like in Paris today?"},
 ]
 
+
+# messages = [
+#     {"role": "system", "content": system_prompt},
+#     {"role": "user", "content": "Do you smell what the rock is cooking?"},
+# ]
+
 completion = client.chat.completions.create(
     model="gpt-4o",
     messages=messages,
@@ -98,7 +107,7 @@ class WeatherResponse(BaseModel):
         description="The current temperature in celsius for the given location."
     )
     response: str = Field(
-        description="A natural language response to the user's question."
+        description="A natural language response to the user's question, in a hilarious manner."
     )
 
 
@@ -106,7 +115,7 @@ completion_2 = client.beta.chat.completions.parse(
     model="gpt-4o",
     messages=messages,
     tools=tools,
-    response_format=WeatherResponse,
+    response_format=WeatherResponse
 )
 
 # --------------------------------------------------------------
